@@ -33,14 +33,22 @@ application {
 }
 
 // Custom task to run DonutIndicatorTestApp
-task testDonutIndicator(type: JavaExec) {
+task testCircleIndicator(type: JavaExec) {
     group = 'application'
-    description = 'Runs the DonutIndicatorTestApp to preview the DonutIndicator panel.'
 
     // Specify the main class to run
-    mainClass.set('test.DonutIndicatorTest')
+    mainClass.set('test.CircleIndicatorTest')
 
     // Set the classpath to include the main runtime classpath
     classpath = sourceSets.main.runtimeClasspath
 }
 
+task testBatteryLevel(type: JavaExec) {
+    group = 'application'
+
+    // Specify the main class to run
+    mainClass.set('test.BatteryLevelTest')
+
+    // Set the classpath to include the main runtime classpath
+    classpath = sourceSets.main.runtimeClasspath
+}

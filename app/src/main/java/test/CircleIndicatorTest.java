@@ -11,7 +11,7 @@ public class CircleIndicatorTest extends JFrame {
     public CircleIndicatorTest() {
         super("Smart Home");
         this.setSize(800, 600);
-        temperatureIndicator = new CircleIndicator();
+        temperatureIndicator = new CircleIndicator(0, 100, "°C");
         add(temperatureIndicator);
         setVisible(true);
         setLocationRelativeTo(null);
@@ -19,13 +19,11 @@ public class CircleIndicatorTest extends JFrame {
 
         Timer timer = new Timer(100, null); // Create a timer with 100ms interval
         timer.addActionListener(e -> {
-            int currentPercentage = temperatureIndicator.getPercentage();
+            double currentValue = temperatureIndicator.getValue();
 
-            if (currentPercentage < 100) {
-                temperatureIndicator.setPercentage(currentPercentage + 1); // Increment percentage
-                temperatureIndicator.setValue(currentPercentage + 1);
+            if (currentValue < 100) {
+                temperatureIndicator.setValue(currentValue + 1);
             } else {
-                temperatureIndicator.setPercentage(0);
                 temperatureIndicator.setValue(0);
             }
         });
