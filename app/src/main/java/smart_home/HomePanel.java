@@ -4,51 +4,47 @@ import javax.swing.*;
 import java.awt.*;
 
 public class HomePanel extends JPanel {
+    private BatteryLevel batteryLevel;
+    private CircleIndicator temperatureIndicator;
+    private CircleIndicator humidityIndicator;
+    private SecurityAlertSystem presenceDetector;
+    private GarageDoorController carDetector;
 
     public HomePanel() {
+        setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
+        // Create sensors container
+        JPanel sensors = new JPanel(new GridLayout(3, 1, 0, 5));
+        sensors.setBackground(Color.WHITE);
+
         // Create panels
-        CircleIndicator panel1 = new CircleIndicator();
-        panel1.setPercentage(10);
+        batteryLevel = new BatteryLevel();
 
-        CircleIndicator panel2 = new CircleIndicator();
-        panel2.setPercentage(20);
+        temperatureIndicator = new CircleIndicator(0, 100, "°C");
 
-        CircleIndicator panel3 = new CircleIndicator();
-        panel3.setPercentage(30);
+        humidityIndicator = new CircleIndicator(0, 100, "%");
 
-        CircleIndicator panel4 = new CircleIndicator();
-        panel4.setPercentage(40);
+        presenceDetector = new SecurityAlertSystem();
+        presenceDetector.displayNormalStatus();
 
-        CircleIndicator panel5 = new CircleIndicator();
-        panel5.setPercentage(50);
+        carDetector = new GarageDoorController();
 
-        // GroupLayout setup
-        GroupLayout layout = new GroupLayout(this);
-        setLayout(layout);
+        JPanel secondRow = new JPanel(new GridLayout(1, 2, 5, 5));
+        secondRow.setBackground(Color.WHITE);
+        secondRow.add(temperatureIndicator);
+        secondRow.add(humidityIndicator);
 
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true);
+        JPanel thirdRow = new JPanel(new GridLayout(1, 2, 5, 5));
+        thirdRow.setBackground(Color.WHITE);
+        thirdRow.add(presenceDetector);
+        thirdRow.add(carDetector);
 
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                        .addComponent(panel1)
-                        .addGroup(layout.createSequentialGroup()
-                                .addComponent(panel2)
-                                .addComponent(panel3))
-                        .addGroup(layout.createSequentialGroup()
-                                .addComponent(panel4)
-                                .addComponent(panel5)));
+        sensors.add(batteryLevel);
+        sensors.add(secondRow);
+        sensors.add(thirdRow);
 
-        layout.setVerticalGroup(
-                layout.createSequentialGroup()
-                        .addComponent(panel1)
-                        .addGroup(layout.createParallelGroup()
-                                .addComponent(panel2)
-                                .addComponent(panel3))
-                        .addGroup(layout.createParallelGroup()
-                                .addComponent(panel4)
-                                .addComponent(panel5)));
+        // Add to BorderLayout
+        add(sensors, BorderLayout.CENTER);
     }
 }

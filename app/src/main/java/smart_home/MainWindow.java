@@ -10,7 +10,7 @@ public class MainWindow extends JFrame {
     public MainWindow() {
         setTitle("Smart Home");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1280,720);
+        setSize(1280, 720);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -33,6 +33,8 @@ public class MainWindow extends JFrame {
 
         // Show the home panel by default
         cardLayout.show(contentPanel, "Home");
+
+        setVisible(true);
     }
 
     // Method to switch interfaces
@@ -43,7 +45,6 @@ public class MainWindow extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             MainWindow mainWindow = new MainWindow();
-            mainWindow.setVisible(true);
         });
     }
 }
