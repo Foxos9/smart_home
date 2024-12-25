@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements LoginListener {
     private CardLayout cardLayout;
     private JPanel contentPanel;
 
@@ -15,25 +15,26 @@ public class MainWindow extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Create sidebar
-        Sidebar sidebar = new Sidebar(this);
-
         // Create content panel with CardLayout
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
 
         // Add interface panels to CardLayout
-        contentPanel.add(new HomePanel(), "Home");
-        contentPanel.add(new JPanel(), "Interface2"); // Placeholder
-        contentPanel.add(new JPanel(), "Interface3"); // Placeholder
-        contentPanel.add(new JPanel(), "Interface4"); // Placeholder
+        LoginPanel loginPanel = new LoginPanel();
+        loginPanel.addLoginListener(this);
+        loginPanel.setPreferredSize(new Dimension(600, 400));
+
+        // Add action listener to generate other panels
+
+        JPanel loginWrapper = new JPanel(new GridBagLayout());
+        loginWrapper.add(loginPanel);
+        contentPanel.add(loginWrapper, "Login"); // Placeholder
 
         // Add components to main frame
-        add(sidebar, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
 
         // Show the home panel by default
-        cardLayout.show(contentPanel, "Home");
+        cardLayout.show(contentPanel, "Login");
 
         setVisible(true);
         try {
@@ -46,6 +47,12 @@ public class MainWindow extends JFrame {
     // Method to switch interfaces
     public void switchInterface(String panelName) {
         cardLayout.show(contentPanel, panelName);
+    }
+
+    @Override
+    public void onLogin(String username, boolean isAdmin) {
+        contentPanel.add(new HomePanel(), "Home");
+        add(new Sidebar(this), BorderLayout.WEST);
     }
 
     public static void main(String[] args) {
