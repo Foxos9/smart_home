@@ -46,5 +46,31 @@ public class HomePanel extends JPanel {
 
         // Add to BorderLayout
         add(sensors, BorderLayout.CENTER);
+
+        // Start a timer to update sensor values periodically
+        Timer timer = new Timer(5000, e -> {
+            updateSensorValues(); // Fetch and update sensor values
+        }); // Update every 5 seconds
+        timer.start();
+    }
+
+    private void updateSensorValues() {
+        // Fetch the latest values from the database using the Database static methods
+        double newTemperature = Database.getLatestSensorValue(1, "temperature");
+        double newHumidity = Database.getLatestSensorValue(2, "humidity");
+        boolean presenceStatus = Database.getLatestSensorValue(4, "object_status") > 0.5; // Example logic for presence
+        int newBatteryLevel = (int) Database.getLatestSensorValue(5, "battery_level");
+                                                                                          // detection
+        //boolean garageStatus = Database.getLatestSensorValue(5, "garage_status") > 0.5; // Example logic for garage door
+                                                                                        // status
+
+        // Update the components with new values
+        temperatureIndicator.setValue(newTemperature);
+        humidityIndicator.setValue(newHumidity);
+        batteryLevel.setVoltage(newBatteryLevel);
+
+        // Update presence and garage status
+        // presenceDetector.setValues(presenceStatus);
+        // carDetector.setValues(garageStatus);
     }
 }
