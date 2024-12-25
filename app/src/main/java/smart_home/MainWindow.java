@@ -2,6 +2,7 @@ package smart_home;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class MainWindow extends JFrame {
     private CardLayout cardLayout;
@@ -35,6 +36,11 @@ public class MainWindow extends JFrame {
         cardLayout.show(contentPanel, "Home");
 
         setVisible(true);
+        try {
+            Database.connect("jdbc:mysql://localhost/SmartHome", "", "");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     // Method to switch interfaces
