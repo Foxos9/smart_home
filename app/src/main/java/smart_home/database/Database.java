@@ -1,8 +1,10 @@
-package smart_home;
+package smart_home.database;
 
 import java.sql.*;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import org.json.JSONObject;
+
+import smart_home.utils.LoginStatus;
 
 public class Database {
     private static Connection connection;

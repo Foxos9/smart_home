@@ -32,7 +32,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'smart_home.MainWindow'
+    mainClass = 'smart_home.ui.MainWindow'
 }
 
 // Custom task to run DonutIndicatorTestApp

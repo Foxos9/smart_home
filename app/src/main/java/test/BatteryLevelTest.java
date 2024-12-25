@@ -1,10 +1,9 @@
 package test;
 
-import smart_home.*;
-
+import javax.swing.*;
 import java.util.Random;
 
-import javax.swing.*;
+import smart_home.utils.BatteryLevel;
 
 public class BatteryLevelTest extends JFrame {
     private static final int MAX_VOLTAGE = 5; // Tension maximale (exemple : 5V)

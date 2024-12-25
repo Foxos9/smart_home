@@ -1,23 +1,17 @@
-package smart_home;
+package smart_home.ui;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.sql.*;
-import java.util.HashMap;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
-
-enum LoginStatus {
-    SUCCESS_ADMIN,
-    SUCCESS_USER,
-    FAILED_INVALID_CREDENTIALS,
-    ERROR
-}
+import smart_home.utils.*;
+import smart_home.database.Database;
 
 public class LoginPanel extends JPanel implements ActionListener {
     private JLabel userLabel = new JLabel("User:");
@@ -31,8 +25,6 @@ public class LoginPanel extends JPanel implements ActionListener {
 
     private Boolean root = false;
 
-    // Dictionary to store username-password pairs
-    private HashMap<String, String> credentials = new HashMap<>();
     private List<LoginListener> loginListeners = new ArrayList<>();
 
     public LoginPanel() {

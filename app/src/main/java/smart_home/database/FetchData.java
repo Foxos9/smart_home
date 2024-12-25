@@ -1,4 +1,4 @@
-package smart_home;
+package smart_home.database;
 
 import java.util.ArrayList;
 import java.util.List;

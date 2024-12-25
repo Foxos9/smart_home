@@ -1,4 +1,4 @@
-package smart_home;
+package smart_home.ui;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,8 +1,11 @@
-package smart_home;
+package smart_home.ui;
 
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
+
+import smart_home.utils.*;
+import smart_home.database.Database;
 
 public class MainWindow extends JFrame implements LoginListener {
     private CardLayout cardLayout;

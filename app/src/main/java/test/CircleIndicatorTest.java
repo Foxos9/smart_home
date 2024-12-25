@@ -1,6 +1,6 @@
 package test;
 
-import smart_home.*;
+import smart_home.utils.CircleIndicator;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;

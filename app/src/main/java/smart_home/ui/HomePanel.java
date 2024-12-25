@@ -1,7 +1,10 @@
-package smart_home;
+package smart_home.ui;
 
 import javax.swing.*;
 import java.awt.*;
+
+import smart_home.utils.*;
+import smart_home.database.Database;
 
 public class HomePanel extends JPanel {
     private BatteryLevel batteryLevel;
@@ -60,9 +63,6 @@ public class HomePanel extends JPanel {
         double newHumidity = Database.getLatestSensorValue(2, "humidity");
         boolean presenceStatus = Database.getLatestSensorValue(4, "object_status") > 0.5; // Example logic for presence
         int newBatteryLevel = (int) Database.getLatestSensorValue(5, "battery_level");
-                                                                                          // detection
-        //boolean garageStatus = Database.getLatestSensorValue(5, "garage_status") > 0.5; // Example logic for garage door
-                                                                                        // status
 
         // Update the components with new values
         temperatureIndicator.setValue(newTemperature);
