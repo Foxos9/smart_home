@@ -18,6 +18,7 @@ repositories {
 dependencies {
     // This dependency is used by the application.
     implementation libs.guava
+    implementation 'org.json:json:20240303'
     implementation 'mysql:mysql-connector-java:8.0.33'
     implementation("at.favre.lib:bcrypt:0.10.2")
 }
@@ -40,6 +41,16 @@ task testCircleIndicator(type: JavaExec) {
 
     // Specify the main class to run
     mainClass.set('test.CircleIndicatorTest')
+
+    // Set the classpath to include the main runtime classpath
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task testFetchData(type: JavaExec) {
+    group = 'application'
+
+    // Specify the main class to run
+    mainClass.set('test.FetchDataTest')
 
     // Set the classpath to include the main runtime classpath
     classpath = sourceSets.main.runtimeClasspath
