@@ -10,6 +10,7 @@ public class BatteryLevel extends JPanel {
 
     public void setVoltage(double voltage) {
         this.voltage = voltage;
+        repaint();
     }
 
     public void setMaxVoltage(int maxVoltage) {
