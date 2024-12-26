@@ -10,6 +10,7 @@ import smart_home.database.Database;
 public class MainWindow extends JFrame implements LoginListener {
     private CardLayout cardLayout;
     private JPanel contentPanel;
+    private JPanel sidebarPanel;
 
     public MainWindow() {
         setTitle("Smart Home");
@@ -27,11 +28,11 @@ public class MainWindow extends JFrame implements LoginListener {
         loginPanel.addLoginListener(this);
         loginPanel.setPreferredSize(new Dimension(600, 400));
 
-        // Add action listener to generate other panels
-
         JPanel loginWrapper = new JPanel(new GridBagLayout());
         loginWrapper.add(loginPanel);
         contentPanel.add(loginWrapper, "Login"); // Placeholder
+
+        contentPanel.add(new HomePanel(), "Home");
 
         // Add components to main frame
         add(contentPanel, BorderLayout.CENTER);
@@ -54,8 +55,16 @@ public class MainWindow extends JFrame implements LoginListener {
 
     @Override
     public void onLogin(String username, boolean isAdmin) {
-        contentPanel.add(new HomePanel(), "Home");
-        add(new Sidebar(this), BorderLayout.WEST);
+        sidebarPanel = new Sidebar(this);
+        add(sidebarPanel, BorderLayout.WEST);
+    }
+
+    @Override
+    public void onLogout() {
+        // Remove Sidebar from BorderLayout.WEST
+        if (sidebarPanel != null) {
+            remove(sidebarPanel);
+        }
     }
 
     public static void main(String[] args) {

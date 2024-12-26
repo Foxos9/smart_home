@@ -5,8 +5,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import java.sql.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class LoginPanel extends JPanel implements ActionListener {
     private JButton loginButton = new JButton("Login");
     private JLabel messageLabel = new JLabel();
 
-    private Boolean root = false;
+    private Boolean loggedIn = false;
 
     private List<LoginListener> loginListeners = new ArrayList<>();
 
@@ -52,37 +50,38 @@ public class LoginPanel extends JPanel implements ActionListener {
         String password = new String(passInput.getPassword()); // Secure password handling
 
         LoginStatus status = Database.validateLogin(username, password);
-        switch (status) {
-            case SUCCESS_ADMIN:
-                messageLabel.setText("Login successful! Welcome.");
-                messageLabel.setForeground(Color.GREEN);
-                root = true; // Set the role as admin
-                notifyLoginListeners(username, root);
-                break;
-            case SUCCESS_USER:
-                messageLabel.setText("Login successful! Welcome.");
-                messageLabel.setForeground(Color.GREEN);
-                root = false; // Set the role as user
-                notifyLoginListeners(username, root);
-                break;
-            case FAILED_INVALID_CREDENTIALS:
-                messageLabel.setText("Invalid username or password.");
-                messageLabel.setForeground(Color.RED);
-                break;
-            case ERROR:
-                messageLabel.setText("An error occurred during login.");
-                messageLabel.setForeground(Color.RED);
-                break;
+        if (loggedIn == false) {
+            switch (status) {
+                case SUCCESS_ADMIN:
+                    messageLabel.setText("Login successful! Welcome.");
+                    messageLabel.setForeground(Color.GREEN);
+                    loginButton.setText("Log out");
+                    notifyLoginListeners(username, true);
+                    loggedIn = true;
+                    break;
+                case SUCCESS_USER:
+                    messageLabel.setText("Login successful! Welcome.");
+                    messageLabel.setForeground(Color.GREEN);
+                    loginButton.setText("Log out");
+                    notifyLoginListeners(username, false);
+                    loggedIn = true;
+                    break;
+                case FAILED_INVALID_CREDENTIALS:
+                    messageLabel.setText("Invalid username or password.");
+                    messageLabel.setForeground(Color.RED);
+                    break;
+                case ERROR:
+                    messageLabel.setText("An error occurred during login.");
+                    messageLabel.setForeground(Color.RED);
+                    break;
+            }
+            passInput.setText(""); // Clear the password field after checking
+        } else {
+            messageLabel.setText("");
+            loginButton.setText("Login");
+            notifyLogout();
+            loggedIn = false;
         }
-        passInput.setText(""); // Clear the password field after checking
-    }
-
-    public Boolean getRoot() {
-        return root;
-    }
-
-    public void setRoot(Boolean root) {
-        this.root = root;
     }
 
     public void addLoginListener(LoginListener listener) {
@@ -94,4 +93,11 @@ public class LoginPanel extends JPanel implements ActionListener {
             listener.onLogin(username, isAdmin);
         }
     }
+
+    private void notifyLogout() {
+        for (LoginListener listener : loginListeners) {
+            listener.onLogout();
+        }
+    }
+
 }
