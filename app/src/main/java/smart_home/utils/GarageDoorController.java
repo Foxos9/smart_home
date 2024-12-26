@@ -3,6 +3,8 @@ package smart_home.utils;
 import javax.swing.*;
 import java.awt.*;
 
+import smart_home.database.Database;
+
 public class GarageDoorController extends JPanel {
 
     private JLabel statusLabel;
@@ -25,8 +27,19 @@ public class GarageDoorController extends JPanel {
         if (!isGarageOpen) {
             isGarageOpen = true;
             statusLabel.setText("Garage door is opening...");
-            // Simulate delay for opening
-            new Timer(2000, e -> statusLabel.setText("Garage door is open.")).setRepeats(false);
+
+            if (Database.updateGarageDoorStatus(true)) { // Set status to 'active'
+                new Timer(2000, e -> {
+                    statusLabel.setText("Garage door is open.");
+                    if (Database.updateGarageDoorStatus(false)) { // Set status to 'inactive'
+                        // Handle successful door opening and database update
+                    } else {
+                        statusLabel.setText("Error updating garage door status.");
+                    }
+                }).setRepeats(false);
+            } else {
+                statusLabel.setText("Error opening garage door.");
+            }
         } else {
             statusLabel.setText("Garage door is already open.");
         }
@@ -47,7 +60,8 @@ public class GarageDoorController extends JPanel {
     }
 
     /**
-     * Handles RFID detection and prompts the user for confirmation to open the garage door.
+     * Handles RFID detection and prompts the user for confirmation to open the
+     * garage door.
      */
     public void handleRFIDDetection() {
         SwingUtilities.invokeLater(() -> {
@@ -56,8 +70,7 @@ public class GarageDoorController extends JPanel {
                     "RFID detected. Do you want to open the garage door?",
                     "Confirm Action",
                     JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE
-            );
+                    JOptionPane.QUESTION_MESSAGE);
 
             if (response == JOptionPane.YES_OPTION) {
                 openGarageDoor();

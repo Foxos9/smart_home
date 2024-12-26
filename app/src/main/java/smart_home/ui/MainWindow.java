@@ -32,8 +32,6 @@ public class MainWindow extends JFrame implements LoginListener {
         loginWrapper.add(loginPanel);
         contentPanel.add(loginWrapper, "Login"); // Placeholder
 
-        contentPanel.add(new HomePanel(), "Home");
-
         // Add components to main frame
         add(contentPanel, BorderLayout.CENTER);
 
@@ -57,6 +55,8 @@ public class MainWindow extends JFrame implements LoginListener {
     public void onLogin(User user) {
         sidebarPanel = new Sidebar(this);
         add(sidebarPanel, BorderLayout.WEST);
+
+        contentPanel.add(new HomePanel(), "Home");
 
         HelpPanel helpPanel = new HelpPanel(user);
         contentPanel.add(helpPanel, "Help");

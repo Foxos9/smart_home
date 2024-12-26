@@ -191,6 +191,44 @@ public class Database {
         return 0; // Return 0 if no state or key not found
     }
 
+    public static String getLatestCardUID() {
+        String cardUID = null;
+        String query = "SELECT state FROM DeviceStates WHERE device_id = ? ORDER BY logged_at DESC LIMIT 1";
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            // Assuming device_id for RFID sensor (modify if different)
+            stmt.setInt(1, 6); // Replace with actual RFID sensor device ID
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String stateJson = rs.getString("state");
+                if (stateJson != null) {
+                    JSONObject state = new JSONObject(stateJson);
+                    cardUID = state.optString("card_uid", null); // Default to null if key not found
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return cardUID;
+    }
+
+    public static boolean updateGarageDoorStatus(boolean isOpen) {
+        String updateQuery = "UPDATE Devices SET status = ? WHERE device_name = 'Garage Door'";
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(updateQuery);
+            {
+                stmt.setString(1, isOpen ? "active" : "inactive");
+                int rowsAffected = stmt.executeUpdate();
+                return rowsAffected > 0; // Return true if at least one row was updated
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
     public static List<HelpRequest> getUserHelpRequests(int userId) {
         String query = "SELECT * FROM HelpRequests WHERE user_id = ? ORDER BY timestamp DESC";
         List<HelpRequest> requests = new ArrayList<>();

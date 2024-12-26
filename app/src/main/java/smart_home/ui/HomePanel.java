@@ -63,14 +63,24 @@ public class HomePanel extends JPanel {
         double newHumidity = Database.getLatestSensorValue(2, "humidity");
         boolean presenceStatus = Database.getLatestSensorValue(4, "object_status") > 0.5; // Example logic for presence
         int newBatteryLevel = (int) Database.getLatestSensorValue(5, "battery_level");
+        String cardUID = Database.getLatestCardUID();
 
         // Update the components with new values
         temperatureIndicator.setValue(newTemperature);
         humidityIndicator.setValue(newHumidity);
         batteryLevel.setVoltage(newBatteryLevel);
+        if (presenceStatus) {
+            presenceDetector.displayMovementAlert();
+        } else {
+            presenceDetector.displayNormalStatus();
+        }
 
-        // Update presence and garage status
-        // presenceDetector.setValues(presenceStatus);
-        // carDetector.setValues(garageStatus);
+        String authorizedCardUID = "59 1C 10 8D";
+
+        // Update carDetector based on card UID
+        if (cardUID != null && cardUID.equals(authorizedCardUID)) {
+            carDetector.handleRFIDDetection(); // Call method to open the garage door (assuming this exists)
+        }
+
     }
 }
