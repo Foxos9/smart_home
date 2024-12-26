@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import smart_home.utils.LoginStatus;
+import smart_home.utils.HelpRequest;
 import smart_home.utils.User;
 
 public class Database {
@@ -188,6 +189,76 @@ public class Database {
             }
         }
         return 0; // Return 0 if no state or key not found
+    }
+
+    public static List<HelpRequest> getUserHelpRequests(int userId) {
+        String query = "SELECT * FROM HelpRequests WHERE user_id = ? ORDER BY timestamp DESC";
+        List<HelpRequest> requests = new ArrayList<>();
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, userId); // Retrieve requests for the specified user
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String message = rs.getString("message");
+                String adminReply = rs.getString("admin_reply");
+                String status = rs.getString("status");
+                requests.add(new HelpRequest(id, userId, message, adminReply, status));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return requests;
+    }
+
+    public static void submitHelpRequest(int userId, String message) {
+        String query = "INSERT INTO HelpRequests (user_id, message) VALUES (?, ?)";
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, userId);
+            stmt.setString(2, message);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void submitAdminReply(int requestId, String replyMessage) {
+        String query = "UPDATE HelpRequests SET status = 'replied', admin_reply = ? WHERE id = ?";
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setString(1, replyMessage);
+            stmt.setInt(2, requestId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static List<HelpRequest> getPendingHelpRequests() {
+        String query = "SELECT * FROM HelpRequests WHERE status = 'submitted'";
+        List<HelpRequest> requests = new ArrayList<>();
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                int userId = rs.getInt("user_id");
+                String message = rs.getString("message");
+                String adminReply = rs.getString("admin_reply");
+                String status = rs.getString("status");
+                requests.add(new HelpRequest(id, userId, message, adminReply, status));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return requests;
     }
 
     // Method to close the connection
