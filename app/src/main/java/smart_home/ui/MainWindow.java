@@ -57,6 +57,10 @@ public class MainWindow extends JFrame implements LoginListener {
     public void onLogin(String username, boolean isAdmin) {
         sidebarPanel = new Sidebar(this);
         add(sidebarPanel, BorderLayout.WEST);
+
+        SettingsPanel settingsPanel = new SettingsPanel();
+        settingsPanel.onLogin(username, isAdmin);
+        contentPanel.add(settingsPanel, "Settings");
     }
 
     @Override

@@ -13,13 +13,13 @@ public class Sidebar extends JPanel {
         // Create buttons for navigation
         JButton loginButton = new JButton("Login");
         JButton homeButton = new JButton("Home");
-        JButton interface3Button = new JButton("Interface 3");
+        JButton interface3Button = new JButton("Settings");
         JButton interface4Button = new JButton("Interface 4");
 
         // Add listeners to buttons
         loginButton.addActionListener(e -> mainWindow.switchInterface("Login"));
         homeButton.addActionListener(e -> mainWindow.switchInterface("Home"));
-        interface3Button.addActionListener(e -> mainWindow.switchInterface("Interface3"));
+        interface3Button.addActionListener(e -> mainWindow.switchInterface("Settings"));
         interface4Button.addActionListener(e -> mainWindow.switchInterface("Interface4"));
 
         // Add buttons to the sidebar
