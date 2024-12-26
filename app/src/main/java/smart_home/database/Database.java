@@ -9,6 +9,10 @@ import smart_home.utils.LoginStatus;
 public class Database {
     private static Connection connection;
 
+    public static Connection getConnection() {
+        return connection;
+    }
+
     // Establish a connection to the database (static to be used across methods)
     public static void connect(String dbUrl, String dbUser, String dbPassword) throws SQLException {
         connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
@@ -47,7 +51,7 @@ public class Database {
 
     // Query the database to get user information by username
     public static ResultSet getUserInfo(String username) {
-        String query = "SELECT * FROM Users WHERE username = ?";
+        String query = "SELECT * FROM Users WHERE username LIKE ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setString(1, username);
