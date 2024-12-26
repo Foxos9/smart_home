@@ -42,7 +42,7 @@ public class MainWindow extends JFrame implements LoginListener {
 
         setVisible(true);
         try {
-            Database.connect("jdbc:mysql://localhost/SmartHome", "", "");
+            Database.connect("jdbc:mysql://localhost/SmartHome", "yahya", "123");
         } catch (SQLException e) {
             e.printStackTrace();
         }
