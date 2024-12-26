@@ -61,8 +61,7 @@ public class MainWindow extends JFrame implements LoginListener {
         HelpPanel helpPanel = new HelpPanel(user);
         contentPanel.add(helpPanel, "Help");
 
-        SettingsPanel settingsPanel = new SettingsPanel();
-        settingsPanel.onLogin(user);
+        SettingsPanel settingsPanel = new SettingsPanel(user);
         contentPanel.add(settingsPanel, "Settings");
     }
 

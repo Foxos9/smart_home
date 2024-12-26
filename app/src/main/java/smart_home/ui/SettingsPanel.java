@@ -14,25 +14,22 @@ import java.util.Vector;
 import java.sql.*;
 
 import smart_home.database.Database;
-import smart_home.utils.LoginListener;
 import smart_home.utils.User;
+
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
-public class SettingsPanel extends JPanel implements LoginListener {
+public class SettingsPanel extends JPanel {
     private JTable userTable;
     private DefaultTableModel userTableModel;
     private JTabbedPane tabbedPane;
 
-    public SettingsPanel() {
+    public SettingsPanel(User user) {
         setLayout(new BorderLayout());
 
         tabbedPane = new JTabbedPane();
 
         add(tabbedPane, BorderLayout.CENTER);
-    }
 
-    @Override
-    public void onLogin(User user) {
         if (user.isAdmin()) {
             // User Management Panel
             JPanel userSettings = new JPanel(new BorderLayout());
@@ -157,10 +154,6 @@ public class SettingsPanel extends JPanel implements LoginListener {
 
         panel.add(saveButton);
         userSettings.add(panel, BorderLayout.CENTER);
-    }
-
-    @Override
-    public void onLogout() {
     }
 
     private void loadUsers() {
