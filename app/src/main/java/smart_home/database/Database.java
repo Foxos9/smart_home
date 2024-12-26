@@ -4,7 +4,11 @@ import java.sql.*;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import smart_home.utils.LoginStatus;
+import smart_home.utils.User;
 
 public class Database {
     private static Connection connection;
@@ -50,16 +54,49 @@ public class Database {
     }
 
     // Query the database to get user information by username
-    public static ResultSet getUserInfo(String username) {
-        String query = "SELECT * FROM Users WHERE username LIKE ?";
+    public static User getUserInfo(String username) {
+        String query = "SELECT user_id, username, email, role FROM Users WHERE username = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setString(1, username);
-            return stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
+
+            // If user exists
+            if (rs.next()) {
+                int userId = rs.getInt("user_id");
+                String email = rs.getString("email");
+                String role = rs.getString("role");
+                boolean isAdmin = "admin".equals(role); // Check if the role is admin
+                return new User(userId, username, email, isAdmin);
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return null;
+        return null; // Return null if user is not found
+    }
+
+    // Query the database to get all users
+    public static List<User> getUsers() {
+        String query = "SELECT user_id, username, email, role FROM Users WHERE username LIKE '%'";
+        List<User> users = new ArrayList<>();
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            // Iterate through the ResultSet and populate the List
+            while (rs.next()) {
+                int userId = rs.getInt("user_id");
+                String username = rs.getString("username");
+                String email = rs.getString("email");
+                String role = rs.getString("role");
+                boolean isAdmin = "admin".equals(role); // Check if the role is admin
+                users.add(new User(userId, username, email, isAdmin));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return users;
     }
 
     // Insert Device State data

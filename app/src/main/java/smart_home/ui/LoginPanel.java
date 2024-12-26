@@ -56,14 +56,14 @@ public class LoginPanel extends JPanel implements ActionListener {
                     messageLabel.setText("Login successful! Welcome.");
                     messageLabel.setForeground(Color.GREEN);
                     loginButton.setText("Log out");
-                    notifyLoginListeners(username, true);
+                    notifyLoginListeners(Database.getUserInfo(username));
                     loggedIn = true;
                     break;
                 case SUCCESS_USER:
                     messageLabel.setText("Login successful! Welcome.");
                     messageLabel.setForeground(Color.GREEN);
                     loginButton.setText("Log out");
-                    notifyLoginListeners(username, false);
+                    notifyLoginListeners(Database.getUserInfo(username));
                     loggedIn = true;
                     break;
                 case FAILED_INVALID_CREDENTIALS:
@@ -88,9 +88,9 @@ public class LoginPanel extends JPanel implements ActionListener {
         loginListeners.add(listener);
     }
 
-    private void notifyLoginListeners(String username, boolean isAdmin) {
+    private void notifyLoginListeners(User user) {
         for (LoginListener listener : loginListeners) {
-            listener.onLogin(username, isAdmin);
+            listener.onLogin(user);
         }
     }
 

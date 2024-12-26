@@ -9,11 +9,13 @@ import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.List;
 import java.util.Vector;
 import java.sql.*;
 
 import smart_home.database.Database;
 import smart_home.utils.LoginListener;
+import smart_home.utils.User;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
 public class SettingsPanel extends JPanel implements LoginListener {
@@ -30,8 +32,8 @@ public class SettingsPanel extends JPanel implements LoginListener {
     }
 
     @Override
-    public void onLogin(String username, boolean isAdmin) {
-        if (isAdmin) {
+    public void onLogin(User user) {
+        if (user.isAdmin()) {
             // User Management Panel
             JPanel userSettings = new JPanel(new BorderLayout());
             setupUserManagementPanel(userSettings);
@@ -39,7 +41,7 @@ public class SettingsPanel extends JPanel implements LoginListener {
         } else {
             // Non-admin: Allow editing own information
             JPanel userSettings = new JPanel(new BorderLayout());
-            setupNonAdminUserPanel(userSettings, username);
+            setupNonAdminUserPanel(userSettings, user.getUsername());
             tabbedPane.add("Edit Profile", userSettings);
         }
     }
@@ -163,18 +165,22 @@ public class SettingsPanel extends JPanel implements LoginListener {
 
     private void loadUsers() {
         try {
-            ResultSet rs = Database.getUserInfo("%"); // Fetch all users
-            userTableModel.setRowCount(0); // Clear existing rows
-            while (rs.next()) {
+            // Fetch the list of users from the database
+            List<User> users = Database.getUsers(); // Fetch all users
+            userTableModel.setRowCount(0); // Clear existing rows in the table
+
+            // Iterate through the list of users and populate the table model
+            for (User user : users) {
                 Vector<Object> row = new Vector<>();
-                row.add(rs.getInt("user_id"));
-                row.add(rs.getString("username"));
-                row.add(rs.getString("email"));
-                row.add(rs.getString("role"));
+                row.add(user.getUserId());
+                row.add(user.getUsername());
+                row.add(user.getEmail());
+                row.add(user.isAdmin() ? "admin" : "user");
                 userTableModel.addRow(row);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Print stack trace for debugging
             JOptionPane.showMessageDialog(this, "Error loading users: " + e.getMessage(), "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
