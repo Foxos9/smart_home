@@ -26,36 +26,6 @@ public class HelpPanel extends JPanel {
         this.userId = user.getUserId();
         setLayout(new BorderLayout());
 
-        // Set up the message area for user help request
-        messageArea = new JTextArea(5, 20);
-        messageArea.setWrapStyleWord(true);
-        messageArea.setLineWrap(true);
-        JScrollPane messageScrollPane = new JScrollPane(messageArea);
-
-        // Setup the reply area for admins
-        replyArea = new JTextArea(5, 20);
-        replyArea.setWrapStyleWord(true);
-        replyArea.setLineWrap(true);
-        JScrollPane replyScrollPane = new JScrollPane(replyArea);
-
-        // Submit request button for users
-        submitButton = new JButton("Submit Help Request");
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                submitHelpRequest();
-            }
-        });
-
-        // Reply button for admins
-        replyButton = new JButton("Submit Admin Reply");
-        replyButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                submitAdminReply();
-            }
-        });
-
         // Create a table to display help requests
         requestTableModel = new DefaultTableModel(new String[] { "ID", "User ID", "Message", "Status", "Reply" }, 0) {
             @Override
@@ -69,27 +39,52 @@ public class HelpPanel extends JPanel {
         // If the panel is for an admin, they can view all requests; otherwise, only the
         // user's requests
         if (user.isAdmin()) {
+            // Setup the reply area for admins
+            replyArea = new JTextArea(5, 20);
+            replyArea.setWrapStyleWord(true);
+            replyArea.setLineWrap(true);
+            JScrollPane replyScrollPane = new JScrollPane(replyArea);
+
+            // Reply button for admins
+            replyButton = new JButton("Submit Admin Reply");
+            replyButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    submitAdminReply();
+                }
+            });
             loadPendingRequests(); // Admin views all requests
             replyButton.setEnabled(true);
+            JPanel bottomPanel = new JPanel(new BorderLayout());
+            bottomPanel.add(new JLabel("Admin Reply (for Admin):"), BorderLayout.NORTH);
+            bottomPanel.add(replyScrollPane, BorderLayout.CENTER);
+            bottomPanel.add(replyButton, BorderLayout.SOUTH);
+            add(bottomPanel, BorderLayout.SOUTH);
         } else {
+            // Set up the message area for user help request
+            messageArea = new JTextArea(5, 20);
+            messageArea.setWrapStyleWord(true);
+            messageArea.setLineWrap(true);
+            JScrollPane messageScrollPane = new JScrollPane(messageArea);
+
+            // Submit request button for users
+            submitButton = new JButton("Submit Help Request");
+            submitButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    submitHelpRequest();
+                }
+            });
             loadUserRequests(); // User only sees their own requests
             submitButton.setEnabled(true);
+            JPanel topPanel = new JPanel(new BorderLayout());
+            topPanel.add(new JLabel("Help Request Message:"), BorderLayout.NORTH);
+            topPanel.add(messageScrollPane, BorderLayout.CENTER);
+            topPanel.add(submitButton, BorderLayout.SOUTH);
+            add(topPanel, BorderLayout.NORTH);
         }
 
-        // Layout adjustments
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(new JLabel("Help Request Message:"), BorderLayout.NORTH);
-        topPanel.add(messageScrollPane, BorderLayout.CENTER);
-        topPanel.add(submitButton, BorderLayout.SOUTH);
-
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.add(new JLabel("Admin Reply (for Admin):"), BorderLayout.NORTH);
-        bottomPanel.add(replyScrollPane, BorderLayout.CENTER);
-        bottomPanel.add(replyButton, BorderLayout.SOUTH);
-
-        add(topPanel, BorderLayout.NORTH);
         add(requestTableScrollPane, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
     }
 
     // Load the user's past help requests
