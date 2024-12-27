@@ -9,6 +9,7 @@ public class GarageDoorController extends JPanel {
 
     private JLabel statusLabel;
     private boolean isGarageOpen = false;
+    private boolean isPromptActive = false; // Flag to prevent multiple prompts
 
     public GarageDoorController() {
         setLayout(new BorderLayout());
@@ -64,6 +65,12 @@ public class GarageDoorController extends JPanel {
      * garage door.
      */
     public void handleRFIDDetection() {
+        if (isPromptActive) {
+            statusLabel.setText("RFID detected. Waiting for response...");
+            return;
+        }
+
+        isPromptActive = true; // Mark prompt as active
         SwingUtilities.invokeLater(() -> {
             int response = JOptionPane.showConfirmDialog(
                     this,
@@ -71,6 +78,8 @@ public class GarageDoorController extends JPanel {
                     "Confirm Action",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
+
+            isPromptActive = false; // Reset flag after user responds
 
             if (response == JOptionPane.YES_OPTION) {
                 openGarageDoor();
